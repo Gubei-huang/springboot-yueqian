@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.crazy.finance.dao.UserFundProductDao">
+
+    <resultMap id="ResultMap" type="userFundProduct">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="userId" jdbcType="INTEGER" property="userid"/>
+        <result column="fundid" jdbcType="INTEGER" property="fundid"/>
+        <result column="startTime" jdbcType="DATE" property="starttime"/>
+        <result column="endTime" jdbcType="TIMESTAMP" property="endtime"/>
+        <result column="status" jdbcType="INTEGER" property="status"/>
+    </resultMap>
+
+    <resultMap id="ResultMapAll" type="userFundProduct">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="userId" jdbcType="INTEGER" property="userid"/>
+        <result column="fundid" jdbcType="INTEGER" property="fundid"/>
+        <result column="startTime" jdbcType="DATE" property="starttime"/>
+        <result column="status" jdbcType="INTEGER" property="status"/>
+        <association property="fundProduct" javaType="fundProduct" column="fundid"
+                     select="com.crazy.finance.dao.FundProductDao.selectFundProductById">
+            <id column="id" jdbcType="INTEGER" property="id" />
+            <result column="type" jdbcType="INTEGER" property="type" />
+            <result column="code" jdbcType="INTEGER" property="code" />
+            <result column="fundDesc" jdbcType="VARCHAR" property="funddesc" />
+            <result column="dailyGrowth" jdbcType="DECIMAL" property="dailygrowth" />
+            <result column="leastMoney" jdbcType="DECIMAL" property="leastmoney" />
+            <result column="profit" jdbcType="DECIMAL" property="profit" />
+            <result column="invesTerm" jdbcType="VARCHAR" property="investerm" />
+        </association>
+
+    </resultMap>
+    <insert id="insertUserFundProduct" parameterType="userFundProduct">
+         insert into user_fund_product(userId,fundid,startTime,endTime,status)
+    values(#{userFundProduct.userid},#{userFundProduct.fundid},#{userFundProduct.starttime},#{userFundProduct.endtime},#{userFundProduct.status})
+
+    </insert>
+
+    <select id="selectAllUserFundProductById" resultMap="ResultMapAll">
+        select  * from user_fund_product where userId=#{userId}
+    </select>
+
+</mapper>

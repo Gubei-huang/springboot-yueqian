@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.crazy.finance.dao.FlowOfFundsDao">
+    <resultMap id="ResultMap" type="FlowOfFunds">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="userId" jdbcType="INTEGER" property="userId" />
+        <result column="flowMoney" jdbcType="DECIMAL" property="flowMoney" />
+        <result column="type" jdbcType="INTEGER" property="type" />
+        <result column="source" jdbcType="VARCHAR" property="source" />
+        <result column="createTime" jdbcType="TIMESTAMP" property="createTime" />
+        <result column="fundDesc" jdbcType="VARCHAR" property="fundDesc" />
+    </resultMap>
+    <insert id="insertFlowOfFundsDao" parameterType="flowOfFunds">
+        insert into flow_of_funds( userId,flowMoney ,type , source, createTime,fundDesc )
+        values (#{flowOfFunds.userId},#{flowOfFunds.flowMoney},
+        #{flowOfFunds.type},#{flowOfFunds.source},
+        #{flowOfFunds.createTime},#{flowOfFunds.fundDesc})
+    </insert>
+    <select id="selectAllFlowOfFundsByUserId" resultMap="ResultMap">
+         select * from flow_of_funds where userId=#{id}
+    </select>
+</mapper>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.crazy.finance.dao.ChangeMoneyDao">
+    <resultMap id="ResultMap" type="ChangeMoney">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="annualIncome" jdbcType="DECIMAL" property="annualincome" />
+        <result column="peiIncome" jdbcType="DECIMAL" property="peiincome" />
+        <result column="invesMoney" jdbcType="DECIMAL" property="invesmoney" />
+    </resultMap>
+  <select id="selectAllChangeMoney" resultMap="ResultMap">
+      select * from  change_money
+  </select>
+
+    <select id="selectChangeMoneyById" resultMap="ResultMap">
+          select * from  change_money where id=#{id}
+    </select>
+
+    <delete id="deleteChangeMoneyById" >
+        delete  from change_money where id=#{id}
+    </delete>
+    <insert id="insertChangeMoney">
+         insert into change_money(name,annualIncome,peiIncome,invesMoney)
+         values (#{changeMoney.name}, #{changeMoney.annualincome}, #{changeMoney.peiincome}, #{changeMoney.invesmoney})
+    </insert>
+    <update id="updateChangeMoney" >
+         update change_money set name=#{changeMoney.name},annualIncome=#{changeMoney.annualincome},
+         peiIncome=#{changeMoney.peiincome},invesMoney=#{changeMoney.invesmoney} where id=#{changeMoney.id}
+    </update>
+</mapper>

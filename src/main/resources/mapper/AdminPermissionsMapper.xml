@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.crazy.finance.dao.AdminPermissionsDao">
+    <resultMap id="ResultMap" type="AdminPermissions">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="adminId" jdbcType="INTEGER" property="adminId" />
+        <result column="permissionId" jdbcType="INTEGER" property="permissionId" />
+        <association property="permissions" javaType="Permissions" column="permissionId"
+                     select="com.crazy.finance.dao.PermissionDao.selectPermissionsById">
+        </association>
+    </resultMap>
+   <select id="selectAdminPermissionsByAdminId" resultMap="ResultMap">
+        select  * from  admin_permissions where adminId=#{id}
+   </select>
+    <update id="updateAllAdminPermissions">
+        update  admin_permissions set adminId=0
+    </update>
+    <update id="updateAdminPermissions">
+        update  admin_permissions set adminId=1 where permissionId=#{ap.permissionId}
+    </update>
+</mapper>

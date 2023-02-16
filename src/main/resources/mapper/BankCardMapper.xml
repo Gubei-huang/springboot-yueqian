@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.crazy.finance.dao.BankCardDao">
+    <resultMap id="ResultMap" type="bankcard">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="cardBank" jdbcType="VARCHAR" property="cardbank" />
+        <result column="type" jdbcType="INTEGER" property="type" />
+        <result column="cardNum" jdbcType="VARCHAR" property="cardnum" />
+        <result column="userId" jdbcType="INTEGER" property="userid" />
+        <result column="balance" jdbcType="DECIMAL" property="balance" />
+        <result column="defaultl" jdbcType="INTEGER" property="Default" />
+    </resultMap>
+    <resultMap id="ResultMapUser" type="bankcard">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="cardBank" jdbcType="VARCHAR" property="cardbank" />
+        <result column="type" jdbcType="INTEGER" property="type" />
+        <result column="cardNum" jdbcType="VARCHAR" property="cardnum" />
+        <result column="userId" jdbcType="INTEGER" property="userid" />
+        <result column="balance" jdbcType="DECIMAL" property="balance" />
+        <result column="defaultl" jdbcType="INTEGER" property="Default" />
+        <association property="user" javaType="user" column="userId" select="com.crazy.finance.dao.UserDao.selectUserById">
+            <id column="id" jdbcType="INTEGER" property="id" />
+            <result column="username" jdbcType="VARCHAR" property="username" />
+            <result column="realname" jdbcType="VARCHAR" property="realname" />
+            <result column="password" jdbcType="VARCHAR" property="password" />
+            <result column="IDcard" jdbcType="VARCHAR" property="idcard" />
+            <result column="phone" jdbcType="VARCHAR" property="phone" />
+            <result column="email" jdbcType="VARCHAR" property="email" />
+            <result column="paypwd" jdbcType="INTEGER" property="paypwd" />
+            <result column="status" jdbcType="INTEGER" property="status" />
+            <result column="reputation" jdbcType="VARCHAR" property="reputation" />
+        </association>
+    </resultMap>
+    <select id="selectAllBankCard" resultMap="ResultMapUser">
+         select  * from bankcard
+    </select>
+   <select id="selectAllBankCardByUserId" resultMap="ResultMap" parameterType="int">
+        select * from bankcard where userId=#{userId}
+   </select>
+  <update id="updateBankCardDufault">
+      update bankcard set defaultl=0 where userId=#{userId}
+  </update>
+
+    <update id="updateBankCardByBankCardId" >
+        update bankcard set defaultl=1 where userId=#{userId} and id=#{id}
+    </update>
+      <select id="selectDefaultBankCardByUserId" resultMap="ResultMap">
+           select * from bankcard where  userId=#{userId} and defaultl=1
+      </select>
+    <update id="updateBankCardBalance" >
+        update bankcard set balance=#{balance} where id=#{bankCardId}
+    </update>
+
+    <insert id="insertBankCard" >
+         insert  into bankcard(cardBank,type,cardNum,userId,balance,defaultl)
+         values(#{bankCard.cardbank},#{bankCard.type},#{bankCard.cardnum},#{bankCard.userid},#{bankCard.balance},#{bankCard.Default})
+    </insert>
+
+    <select id="selectBankCardById" resultMap="ResultMapUser">
+        select * from bankcard where id=#{id}
+    </select>
+
+    <update id="updateBankCard">
+        update  bankcard set cardBank=#{bankCard.cardbank},type=#{bankCard.type},cardNum=#{bankCard.cardnum} where id=#{bankCard.id}
+    </update>
+    <delete id="deleteBankCardById">
+        delete from bankcard where id=#{id}
+    </delete>
+</mapper>

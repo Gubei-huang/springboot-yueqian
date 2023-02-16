@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.crazy.finance.dao.PayMoneyDao">
+  <resultMap id="ResultMap" type="payMoney">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="monthMoney" jdbcType="DECIMAL" property="monthmoney" />
+    <result column="autoInto" jdbcType="INTEGER" property="autointo" />
+    <result column="type" jdbcType="INTEGER" property="type" />
+    <result column="invesTerm" jdbcType="VARCHAR" property="investerm" />
+  </resultMap>
+  <select id="selectAllPayMoney" resultMap="ResultMap">
+
+    select * from pay_money
+  </select>
+</mapper>

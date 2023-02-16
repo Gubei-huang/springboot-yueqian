@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+    <title>个人理财系统</title>
+    <!-- 引入bootstrap样式 -->
+    <link th:href="@{/bootstrap/css/bootstrap.css}" rel="stylesheet" type="text/css">
+    <!--图标库-->
+    <link th:href="@{/lyear/css/materialdesignicons.min.css}" rel="stylesheet" type="text/css"/>
+    <!--弹出框样式-->
+    <link th:href="@{/lyear/jconfirm/jquery-confirm.min.css}" rel="stylesheet" type="text/css"/>
+    <!--自定义样式-->
+    <link href="../lyear/css/style.min.css" th:href="@{/lyear/css/style.min.css}" rel="stylesheet" type="text/css"/>
+
+    <link th:src="@{/layui/css/layui.css}" rel="stylesheet" type="text/css"/>
+
+    <script th:src="@{/layui/layui.js}"></script>
+</head>
+<body>
+<div class="lyear-layout-web">
+    <div class="lyear-layout-container">
+        <!--左侧导航-->
+        <div th:replace="user/common/leftbar::#leftbaraside"></div>
+        <!--头部信息-->
+        <div th:replace="user/common/topbar::#topbarheader"></div>
+
+        <!--页面主要内容-->
+        <main class="lyear-layout-content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-10 col-lg-offset-1">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>期限理财推荐<button class="btn btn-primary btn-sm myBtn" >
+                                    <span class="mdi mdi-help-circle-outline"
+                                       aria-hidden="true"></span> 详情</button></h4>
+                            </div>
+                            <div th:if="${!termFinancialList.isEmpty()}" class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover table-striped">
+                                        <thead>
+                                        <tr>
+                                            <th class="info">序号</th>
+                                            <th class="info">产品名称</th>
+                                            <th class="info">收益方式</th>
+                                            <th class="info">日收益率</th>
+                                            <th class="info">起投金额</th>
+                                            <th class="info">投资期限</th>
+                                            <th class="info">预计收益</th>
+                                            <th class="info">相关操作</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr th:each="tf:${termFinancialList}">
+                                            <td th:text="${(tfPageInfo.pageNum - 1) * tfPageInfo.pageSize+tfStat.index+1}"></td>
+                                            <td th:text="${tf.name}"></td>
+                                            <td th:if="${tf.profit==1}" th:text="收益性"></td><td th:if="${tf.profit==2}" th:text="净值型"></td>
+                                            <td th:text="${#numbers.formatDecimal(tf.annualincome*100,1,2)}+'%'"></td>
+                                            <td th:text="${#numbers.formatDecimal(tf.leastmoney,1,2)}+'元'"></td>
+                                            <td th:text="${tf.investerm}"></td>
+                                            <td th:text="${#numbers.formatDecimal(tf.income,1,2)}"></td>
+                                            <td>
+                                                <button class="btn btn-primary btn-sm buy_btn"
+                                                        th:attr="buyBtnId=${tf.id},buyBtnName=${tf.name}">
+															<span class="glyphicon glyphicon-usd"
+                                                                  aria-hidden="true"></span> 投资
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="add_password hidden">
+                                <input id="password" name="password" type="password" value="">
+                            </div>
+
+                            <!-- 显示分页信息 -->
+                            <div class="row">
+
+                                <div class="col-md-5 col-md-offset-1" >
+                                    <div class="btn-group">
+                                        <button class="btn btn-default">
+                                            <span>页次：</span>
+                                        </button>
+                                        <button class="btn btn-default">
+                                            <span th:text="${tfPageInfo.pageNum}+'/'+${tfPageInfo.pages}+'页'"></span>
+                                        </button>
+                                        <button class="btn btn-default">
+                                            <span>每页显示：</span>
+                                        </button>
+                                        <div class="btn-group">
+                                            <button id="btnGroupDrop1"
+                                                    class="btn btn-default dropdown-toggle"
+                                                    data-toggle="dropdown" aria-haspopup="true"
+                                                    aria-expanded="false"><span
+                                                    th:text="${tfPageInfo.pageSize}"></span>
+                                                <span class="caret"></span>
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                                <li th:each="i:${#numbers.sequence(1,10)}">
+                                                    <a th:text="${i}"
+                                                       th:href="@{/user/finance/toTermFinancial.html(pageNum=${tfPageInfo.pageNum},pageSize=${i})}"></a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <button class="btn btn-default">
+                                            <span>条</span>
+                                        </button>
+                                        <button class="btn btn-default">
+                                            <span>总记录数：</span>
+                                        </button>
+                                        <button class="btn btn-default">
+                                            <span th:text="${tfPageInfo.total}+'条'"></span>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- 分页条信息 -->
+                                <div class="col-md-5">
+                                    <nav aria-label="Page navigation">
+                                        <ul class="pagination pagination-lg pull-right"
+                                            style="margin-top: 0">
+                                            <li>
+                                                <a th:href="@{/user/finance/toTermFinancial.html(pageNum=1,pageSize=${tfPageInfo.pageSize})}">首页</a>
+                                            </li>
+                                            <li th:if="${tfPageInfo.hasPreviousPage }"><a
+                                                    th:href="@{/user/finance/toTermFinancial.html(pageNum=${tfPageInfo.pageNum}-1,pageSize=${tfPageInfo.pageSize})}"
+                                                    aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
+                                            </a></li>
+
+                                            <li th:each="page_Num:${tfPageInfo.navigatepageNums }"
+                                                th:class="${page_Num == tfPageInfo.pageNum?'active':''}">
+                                                <a th:if="${page_Num == tfPageInfo.pageNum}"
+                                                   th:text="${page_Num}"
+                                                   th:href="@{#}">
+                                                </a>
+                                                <a th:text="${page_Num}"
+                                                   th:if="${page_Num != tfPageInfo.pageNum}"
+                                                   th:href="@{/user/finance/toTermFinancial.html(pageNum=${page_Num},pageSize=${tfPageInfo.pageSize})}">
+                                                </a>
+                                            </li>
+
+                                            <li th:if="${tfPageInfo.hasNextPage }"><a
+                                                    th:href="@{/user/finance/toTermFinancial.html(pageNum=${tfPageInfo.pageNum}+1,pageSize=${tfPageInfo.pageSize})}"
+                                                    aria-label="Next"> <span aria-hidden="true">&raquo;</span>
+                                            </a></li>
+
+                                            <li><a
+                                                    th:href="@{/user/finance/toTermFinancial.html(pageNum=${tfPageInfo.pages},pageSize=${tfPageInfo.pageSize})}">末页</a>
+                                            </li>
+                                        </ul>
+                                    </nav>
+                                </div>
+                            </div>
+                        </div>
+                            <div th:if="${termFinancialList.isEmpty()}" class="card-body">
+                                <div class="table-responsive">
+                                    <h4>很抱歉！暂时还没有期限理财向您推荐</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        </main>
+        <!--End 页面主要内容-->
+    </div>
+</div>
+
+<!-- 引入jQuery和bootstrap的js -->
+<script th:src="@{/js/jquery.js}"></script>
+<script th:src="@{/bootstrap/js/bootstrap.js}"></script>
+<!--滚动条插件-->
+<script th:src="@{/lyear/js/perfect-scrollbar.min.js}"></script>
+<!--弹出框js-->
+<script th:src="@{/lyear/jconfirm/jquery-confirm.min.js}"></script>
+<!--自定义js脚本-->
+<script th:src="@{/lyear/js/main.min.js}"></script>
+<script th:inline="javascript">
+    $(document).on("click",".myBtn",function (){
+        $.alert("期限理财买入后不可撤销,请谨慎购买");})
+
+    $(document).on("click",".buy_btn",function () {
+        var termFinancialId = $(this).attr("buyBtnId");
+        var userId = [[${session.loginUser.id}]];
+        layui.use('layer', function(){
+            var layer = layui.layer;
+            layer.open({
+                type:1,
+                area: ['170px', '140px'],
+                title:'请输入密码',
+                btn: ['确定','取消'],
+                content:$('.add_password').html(),
+                yes:function (index,layero){
+                    // var bank =$("#select_ed").find("option:selected").text();
+                    var passWord = layero.find("#password").val();
+                    if (passWord==""){
+                        $.alert("密码不能为空");
+                        return false;
+                    }
+                    $.ajax({
+                        url : "/user/buyTermFinancial",
+                        type : "POST",
+                        data : {
+                            "termFinancialId":termFinancialId,
+                             "userId":userId,
+                            "passWord":passWord
+                        },
+                        success : function(result) {
+                            if (result.code===100){
+                                $.alert('买入成功!');
+                                layer.close(index);
+                            }else  {
+                                if (result.code==300)
+                                {
+                                    $.alert('买入失败!,请前往个人信息设置支付密码');
+                                    layer.close(index);
+                                }
+                                else if (result.code==400)
+                                {
+                                    $.alert('买入失败!，银行卡余额不足');
+                                    layer.close(index);
+                                }
+                                else if (result.code==500)
+                                {
+                                    $.alert('买入失败!，请绑定银行卡');
+                                    layer.close(index);
+                                }
+                                else
+                                {
+                                    $.alert('买入失败!');
+                                    layer.close(index);
+                                }
+                            }
+                        }
+                    });
+                }
+            })
+        });
+    //     $.alert({
+    //         title: '提示：',
+    //         content: "确定买入 <strong>"+name+"</strong> 吗？买入该投资后不可撤销",
+    //         buttons: {
+    //             confirm: {
+    //                 text: '确认',
+    //                 btnClass: 'btn-primary',
+    //                 action: function(){
+    //                     $.ajax({
+    //                         url : "/buyTermFinancial",
+    //                         type : "POST",
+    //                         data : {
+    //                             "termFinancialId":termFinancialId,
+    //                             "userId":userId
+    //                         },
+    //                         success : function(result) {
+    //                             if (result.code===100){
+    //                                 $.alert('买入成功!');
+    //                             }else {
+    //                                 $.alert('买入失败!');
+    //                             }
+    //                         }
+    //                     });
+    //                 }
+    //             },
+    //             cancel: {
+    //                 text: '取消',
+    //                 action: function () {
+    //                     $.alert('已取消!');
+    //                 }
+    //             }
+    //         }
+    //     });
+     })
+
+</script>
+</body>
+</html>

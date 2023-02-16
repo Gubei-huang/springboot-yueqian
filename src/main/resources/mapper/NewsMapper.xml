@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.crazy.finance.dao.NewsDao">
+    <resultMap id="ResultMap" type="News">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="title" jdbcType="VARCHAR" property="title" />
+        <result column="newsDesc" jdbcType="VARCHAR" property="newsdesc" />
+        <result column="createTime" jdbcType="DATE" property="createtime" />
+    </resultMap>
+
+    <select id="selectAllNews" resultMap="ResultMap">
+        select * from news
+    </select>
+</mapper>

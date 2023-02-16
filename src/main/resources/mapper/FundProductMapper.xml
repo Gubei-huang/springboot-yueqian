@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.crazy.finance.dao.FundProductDao">
+  <resultMap id="ResultMap" type="fundProduct">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="type" jdbcType="INTEGER" property="type" />
+    <result column="code" jdbcType="INTEGER" property="code" />
+    <result column="fundDesc" jdbcType="VARCHAR" property="funddesc" />
+    <result column="dailyGrowth" jdbcType="DECIMAL" property="dailygrowth" />
+    <result column="leastMoney" jdbcType="DECIMAL" property="leastmoney" />
+    <result column="profit" jdbcType="DECIMAL" property="profit" />
+    <result column="invesTerm" jdbcType="VARCHAR" property="investerm" />
+  </resultMap>
+   <select id="selectAllFundProduct" resultMap="ResultMap">
+     select * from fund_product
+   </select>
+
+  <select id="selectFundProductById" resultMap="ResultMap">
+    select * from fund_product where id=#{fundProductId}
+  </select>
+  <delete id="deleteFundProductById">
+     delete from fund_product where id=#{id}
+  </delete>
+  <update id="updateFundProduct">
+    update fund_product set type=#{fundProduct.type},code=#{fundProduct.code},fundDesc=#{fundProduct.funddesc},
+    dailyGrowth=#{fundProduct.dailygrowth},
+    leastMoney=#{fundProduct.leastmoney},profit=#{fundProduct.profit},invesTerm=#{fundProduct.investerm}
+    where id=#{fundProduct.id}
+  </update>
+
+  <insert id="insertFundProduct">
+     insert  into fund_product(type,code,fundDesc,dailyGrowth,leastMoney,profit,invesTerm) values (
+      #{fundProduct.type},#{fundProduct.code},#{fundProduct.funddesc},#{fundProduct.dailygrowth},
+      #{fundProduct.leastmoney},#{fundProduct.profit},#{fundProduct.investerm}
+     )
+  </insert>
+
+</mapper>

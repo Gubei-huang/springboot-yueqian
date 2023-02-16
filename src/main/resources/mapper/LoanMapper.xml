@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.crazy.finance.dao.LoanDao">
+    <resultMap id="ResultMap" type="loan">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="userId" jdbcType="INTEGER" property="userId" />
+        <result column="adminId" jdbcType="INTEGER" property="adminId" />
+        <result column="startTime" jdbcType="TIMESTAMP" property="startTime" />
+        <result column="amount" jdbcType="DECIMAL" property="amount" />
+        <result column="term" jdbcType="INTEGER" property="term" />
+        <result column="rate" jdbcType="DECIMAL" property="rate" />
+        <result column="applyStatus" jdbcType="INTEGER" property="applyStatus" />
+        <result column="loanStatus" jdbcType="INTEGER" property="loanStatus" />
+    </resultMap>
+    <resultMap id="ResultMapUser" type="loan">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="userId" jdbcType="INTEGER" property="userId" />
+        <result column="adminId" jdbcType="INTEGER" property="adminId" />
+        <result column="startTime" jdbcType="TIMESTAMP" property="startTime" />
+        <result column="amount" jdbcType="DECIMAL" property="amount" />
+        <result column="term" jdbcType="INTEGER" property="term" />
+        <result column="rate" jdbcType="DECIMAL" property="rate" />
+        <result column="applyStatus" jdbcType="INTEGER" property="applyStatus" />
+        <result column="loanStatus" jdbcType="INTEGER" property="loanStatus" />
+        <association property="user" javaType="user" column="userId" select="com.crazy.finance.dao.UserDao.selectUserById">
+            <id column="id" jdbcType="INTEGER" property="id" />
+            <result column="username" jdbcType="VARCHAR" property="username" />
+            <result column="realname" jdbcType="VARCHAR" property="realname" />
+            <result column="password" jdbcType="VARCHAR" property="password" />
+            <result column="IDcard" jdbcType="VARCHAR" property="idcard" />
+            <result column="phone" jdbcType="VARCHAR" property="phone" />
+            <result column="email" jdbcType="VARCHAR" property="email" />
+            <result column="paypwd" jdbcType="INTEGER" property="paypwd" />
+            <result column="status" jdbcType="INTEGER" property="status" />
+            <result column="reputation" jdbcType="VARCHAR" property="reputation" />
+        </association>
+    </resultMap>
+
+    <insert id="insertLoan">
+        insert into loan(userId,adminId,startTime,amount,term,rate,applyStatus,loanStatus) values
+        (#{loan.userId},#{loan.adminId},#{loan.startTime},#{loan.amount},
+        #{loan.term},#{loan.rate},#{loan.applyStatus},#{loan.loanStatus})
+    </insert>
+    <select id="selectLoanByUserId" resultMap="ResultMap">
+        select * from loan where userId=#{id}
+    </select>
+
+    <update id="updateLoanById">
+        update loan set loanStatus=2,applyStatus=2 where id=#{id}
+    </update>
+
+    <select id="selectAllExamedLoan" resultMap="ResultMapUser">
+         select * from loan where applyStatus=2 and loanStatus!=2
+    </select>
+    <select id="selectAllLoanByApplyStatusAsc" resultMap="ResultMapUser">
+         select * from loan where applyStatus=0
+    </select>
+
+    <select id="selectLoanById" resultMap="ResultMapUser">
+        select * from loan where  id=#{id}
+    </select>
+    <update id="updateLoan">
+         update loan set userId=#{loan.userId},adminId=#{loan.adminId},startTime=#{loan.startTime},amount=#{loan.amount},
+         term=#{loan.term},rate=#{loan.rate},applyStatus=#{loan.applyStatus},loanStatus=#{loan.loanStatus}
+          where id=#{loan.id}
+    </update>
+</mapper>

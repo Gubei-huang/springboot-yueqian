@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.crazy.finance.dao.BankDao">
+    <resultMap id="ResultMap" type="bank">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="type" jdbcType="VARCHAR" property="type" />
+        <result column="assets" jdbcType="VARCHAR" property="assets" />
+        <result column="bankDesc" jdbcType="VARCHAR" property="bankdesc" />
+    </resultMap>
+ <select id="selectAllBank" resultMap="ResultMap">
+     select * from bank
+ </select>
+    <select id="selectBankById" resultMap="ResultMap">
+        select  * from bank where id=#{id}
+    </select>
+    <delete id="deleteBankById" >
+        delete from bank where id=#{id}
+    </delete>
+
+    <update id="updateBank" >
+        update bank set name=#{bank.name},type=#{bank.type},assets=#{bank.assets},bankDesc=#{bank.bankdesc}
+         where id=#{bank.id}
+    </update>
+    <insert id="insertBank" >
+        insert into bank(name,type,assets,bankDesc) values (
+        #{bank.name}, #{bank.type}, #{bank.assets}, #{bank.bankdesc}
+        );
+    </insert>
+</mapper>

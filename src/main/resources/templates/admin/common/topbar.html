@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>个人理财系统后台</title>
+</head>
+<body>
+
+<header class="lyear-layout-header" id="topbarheader">
+    <nav class="navbar navbar-default" style="background-color: rgba(162,179,173,0.37)">
+        <div class="topbar">
+
+            <div class="topbar-left">
+                <div class="lyear-aside-toggler">
+                    <span class="lyear-toggler-bar"></span>
+                    <span class="lyear-toggler-bar"></span>
+                    <span class="lyear-toggler-bar"></span>
+                </div>
+            </div>
+            <h3><span class="topbar-center" th:text="${pageTopBarInfo}" style="color: #f16969"></span></h3>
+
+            <ul class="topbar-right">
+                <!--个人信息-->
+                <li class="dropdown dropdown-profile" style="margin-right: 20px;">
+                    <a href="javascript:void(0)" data-toggle="dropdown">
+                        用户：
+                        <span th:text="${session.loginAdmin.username}">
+								<span class="caret"></span>
+						</span>
+                        <img id="img" class="img-avatar img-avatar-48 m-r-10" src="./images/pic.jpg"
+                             th:src="@{/images/pic2.jpg}" th:alt="${session.loginAdmin.username}"/>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-right">
+                        <li>
+                            <a th:href="@{/logout(logout='adminLogout')}">
+                                <i class="mdi mdi-logout-variant"></i> 退出登录
+                            </a>
+                        </li>
+                    </ul>
+
+
+                </li>
+            </ul>
+        </div>
+    </nav>
+</header>
+<!--End 头部信息-->
+
+
+</body>
+</html>

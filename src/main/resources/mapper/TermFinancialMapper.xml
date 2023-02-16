@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.crazy.finance.dao.TermFinancialDao">
+    <resultMap id="ResultMap" type="termFinancial">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="invesTerm" jdbcType="VARCHAR" property="investerm"/>
+        <result column="leastMoney" jdbcType="DECIMAL" property="leastmoney"/>
+        <result column="profit" jdbcType="INTEGER" property="profit"/>
+        <result column="annualIncome" jdbcType="DECIMAL" property="annualincome"/>
+        <result column="income" jdbcType="DECIMAL" property="income"/>
+    </resultMap>
+
+    <select id="selectAllTermFinancial" resultMap="ResultMap">
+     select * from term_financial
+   </select>
+
+    <select id="selectTermFinancialById" resultMap="ResultMap" parameterType="int">
+         select * from term_financial where id=#{termFinancialId}
+    </select>
+    <delete id="deleteTermFinancialById">
+        delete  from term_financial where id=#{id}
+    </delete>
+    <update id="updateTermFinancial">
+        update term_financial set name=#{termFinancial.name},invesTerm=#{termFinancial.investerm},leastMoney=#{termFinancial.leastmoney},
+        profit=#{termFinancial.profit},annualIncome=#{termFinancial.annualincome},income=#{termFinancial.income}
+         where id=#{termFinancial.id}
+    </update>
+    <insert id="insertTermFinancial">
+         insert  into term_financial(name,invesTerm,leastMoney,profit,annualIncome,income) values (
+         #{termFinancial.name},#{termFinancial.investerm},#{termFinancial.leastmoney},
+         #{termFinancial.profit},#{termFinancial.annualincome},#{termFinancial.income}
+         )
+    </insert>
+</mapper>

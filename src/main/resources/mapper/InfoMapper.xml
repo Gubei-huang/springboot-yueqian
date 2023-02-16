@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.crazy.finance.dao.InfoDao">
+    <resultMap id="ResultMap" type="info">
+        <id property="id" jdbcType="INTEGER" column="id"/>
+        <result property="sendid" jdbcType="INTEGER" column="sendId"/>
+        <result property="receiveid" jdbcType="INTEGER" column="receiveId"/>
+        <result property="title" jdbcType="VARCHAR" column="title"/>
+        <result property="infodesc" jdbcType="VARCHAR" column="infoDesc"/>
+        <result property="createtime" jdbcType="DATE" column="createTime"/>
+        <result property="status" jdbcType="INTEGER" column="status"/>
+    </resultMap>
+    <resultMap id="ResultMapSelectAll" type="info">
+        <id property="id" jdbcType="INTEGER" column="id"/>
+        <result property="sendid" jdbcType="INTEGER" column="sendId"/>
+        <result property="receiveid" jdbcType="INTEGER" column="receiveId"/>
+        <result property="title" jdbcType="VARCHAR" column="title"/>
+        <result property="infodesc" jdbcType="VARCHAR" column="infoDesc"/>
+        <result property="createtime" jdbcType="DATE" column="createTime"/>
+        <result property="status" jdbcType="INTEGER" column="status"/>
+        <association property="user" column="receiveId" javaType="user"
+                     select="com.crazy.finance.dao.UserDao.selectUserById">
+            <id column="id" jdbcType="INTEGER" property="id"/>
+            <result column="username" jdbcType="VARCHAR" property="username"/>
+            <result column="realname" jdbcType="VARCHAR" property="realname"/>
+            <result column="password" jdbcType="VARCHAR" property="password"/>
+            <result column="IDcard" jdbcType="VARCHAR" property="idcard"/>
+            <result column="phone" jdbcType="VARCHAR" property="phone"/>
+            <result column="email" jdbcType="VARCHAR" property="email"/>
+            <result column="paypwd" jdbcType="INTEGER" property="paypwd"/>
+            <result column="status" jdbcType="INTEGER" property="status"/>
+            <result column="reputation" jdbcType="VARCHAR" property="reputation"/>
+        </association>
+        <association property="admin" column="sendId" javaType="admin"
+                     select="com.crazy.finance.dao.AdminDao.selectAdminById">
+            <id column="id" jdbcType="INTEGER" property="id"/>
+            <result column="username" jdbcType="VARCHAR" property="username"/>
+            <result column="password" jdbcType="VARCHAR" property="password"/>
+            <result column="status" jdbcType="INTEGER" property="status"/>
+        </association>
+    </resultMap>
+
+    <select id="selectInfoByUserId" resultMap="ResultMapSelectAll" parameterType="int">
+    select * from info where receiveId=#{userId}
+    </select>
+
+    <delete id="deleteInfoById" parameterType="int">
+        delete from info where id=#{id}
+    </delete>
+
+    <update id="updateInfoStatusById" parameterType="int" >
+        update info set status=1 where id=#{id}
+    </update>
+    <insert id="insertInfo">
+        insert into info (sendId,receiveId,title,infoDesc,createTime,status) values (
+        #{info.sendid},#{info.receiveid},#{info.title},
+        #{info.infodesc},#{info.createtime},#{info.status}
+        );
+    </insert>
+</mapper>

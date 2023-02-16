@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.crazy.finance.dao.UserChangeMoneyDao">
+
+    <resultMap id="ResultMap" type="UserChangeMoney">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="userId" jdbcType="INTEGER" property="userid"/>
+        <result column="changeId" jdbcType="INTEGER" property="changeid"/>
+        <result column="startTime" jdbcType="TIMESTAMP" property="starttime"/>
+        <result column="lastTime" jdbcType="TIMESTAMP" property="alsttime"/>
+        <result column="profit" jdbcType="DECIMAL" property="profit"/>
+        <result column="status" jdbcType="INTEGER" property="status"/>
+    </resultMap>
+
+    <resultMap id="ResultMapAll" type="UserChangeMoney">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="userId" jdbcType="INTEGER" property="userid"/>
+        <result column="changeId" jdbcType="INTEGER" property="changeid"/>
+        <result column="startTime" jdbcType="TIMESTAMP" property="starttime"/>
+        <result column="lastTime" jdbcType="TIMESTAMP" property="alsttime"/>
+        <result column="profit" jdbcType="DECIMAL" property="profit"/>
+        <result column="status" jdbcType="INTEGER" property="status"/>
+        <association property="changeMoney" javaType="changeMoney" column="changeId"
+                     select="com.crazy.finance.dao.ChangeMoneyDao.selectChangeMoneyById">
+            <id column="id" jdbcType="INTEGER" property="id"/>
+            <result column="name" jdbcType="VARCHAR" property="name"/>
+            <result column="annualIncome" jdbcType="DECIMAL" property="annualincome"/>
+            <result column="peiIncome" jdbcType="DECIMAL" property="peiincome"/>
+            <result column="invesMoney" jdbcType="DECIMAL" property="invesmoney"/>
+        </association>
+    </resultMap>
+    <insert id="insertUserChangeMoney" parameterType="userChangeMoney">
+      insert into user_change_money(userId,changeId,startTime,lastTime,status)
+      values (#{userChangeMoney.userid},#{userChangeMoney.changeid},#{userChangeMoney.starttime},#{userChangeMoney.alsttime},#{userChangeMoney.status})
+   </insert>
+
+    <select id="selectAllUserChangeMoneyById" resultMap="ResultMapAll">
+        select * from user_change_money where userId=#{userId} and status=1;
+    </select>
+    <update id="updateUserChange">
+          update user_change_money set profit=#{userChangeMoney.profit},lastTime=#{userChangeMoney.alsttime} where  id=#{userChangeMoney.id}
+      </update>
+
+    <select id="selectUserChangeMoneyById" resultMap="ResultMapAll">
+        select * from user_change_money where id=#{id}
+    </select>
+
+    <update id="deleteUserChangeMoneyById">
+         update user_change_money set status=0 where id=#{id}
+    </update>
+</mapper>

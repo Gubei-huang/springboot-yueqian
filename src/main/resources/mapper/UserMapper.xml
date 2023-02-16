@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.crazy.finance.dao.UserDao">
+    <resultMap id="ResultMap" type="User">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="username" jdbcType="VARCHAR" property="username" />
+        <result column="realname" jdbcType="VARCHAR" property="realname" />
+        <result column="password" jdbcType="VARCHAR" property="password" />
+        <result column="IDcard" jdbcType="VARCHAR" property="idcard" />
+        <result column="phone" jdbcType="VARCHAR" property="phone" />
+        <result column="email" jdbcType="VARCHAR" property="email" />
+        <result column="paypwd" jdbcType="INTEGER" property="paypwd" />
+        <result column="status" jdbcType="INTEGER" property="status" />
+        <result column="reputation" jdbcType="VARCHAR" property="reputation" />
+    </resultMap>
+
+    <select id="selectUserByUserPwd" resultMap="ResultMap">
+        select * from user where username = #{username} and password = #{password}
+    </select>
+
+    <select id="selectAllUserOnline" resultMap="ResultMap">
+        select * from user where status=1
+    </select>
+    <update id="updateUserReputation" >
+         update user set reputation=#{user.reputation} where id=#{user.id}
+    </update>
+ <update id="updateUserPwdByUserId" >
+      update user set  password=#{newPwd} where id=#{userId}
+ </update>
+    <select id="selectUserById" resultMap="ResultMap" parameterType="int">
+      select * from user where id=#{id}
+    </select>
+
+    <select id="selectUserByUserName" resultMap="ResultMap" parameterType="string">
+      select * from user where username=#{username}
+    </select>
+
+    <update id="updateUserStatus" parameterType="user">
+    update user  set status=#{user.status}   where id=#{user.id}
+    </update>
+    <select id="selectAllUser" resultMap="ResultMap" >
+        select * from user
+    </select>
+    <insert id="insertUser" parameterType="user" >
+        insert into user ( username, realname,
+      password, IDcard, phone,
+      email, paypwd, status,
+      reputation)
+    values ( #{user.username}, #{user.realname},
+      #{user.password}, #{user.idcard,}, #{user.phone},
+      #{user.email}, #{user.paypwd}, #{user.status,},
+      #{user.reputation})
+    </insert>
+
+    <update id="updateUserByUserId" parameterType="user">
+        update  user set realname=#{user.realname},Idcard=#{user.idcard,},paypwd= #{user.paypwd},phone=#{user.phone},email=#{user.email}
+        where id=#{user.id}
+    </update>
+    <update id="updateUserByAdmin">
+          update  user set realname=#{user.realname},phone=#{user.phone},email=#{user.email}
+        where id=#{user.id}
+    </update>
+    <delete id="deleteUserById">
+         delete from user where id=#{id}
+    </delete>
+
+    <insert id="insertUserByAdmin" parameterType="user" >
+        insert into user ( username, realname,
+      password,  phone,
+      email,  status,
+      reputation)
+    values ( #{user.username}, #{user.realname},
+      #{user.password}, #{user.phone},
+      #{user.email},  #{user.status,},
+      #{user.reputation})
+    </insert>
+    <select id="findUserByUsername" resultMap="ResultMap">
+        select * from user where username like '%${username}%'
+    </select>
+</mapper>

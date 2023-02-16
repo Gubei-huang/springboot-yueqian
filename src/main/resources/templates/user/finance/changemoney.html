@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+    <title>个人理财系统</title>
+    <!-- 引入bootstrap样式 -->
+    <link th:href="@{/bootstrap/css/bootstrap.css}" rel="stylesheet" type="text/css">
+    <!--图标库-->
+    <link th:href="@{/lyear/css/materialdesignicons.min.css}" rel="stylesheet" type="text/css"/>
+    <!--弹出框样式-->
+    <link th:href="@{/lyear/jconfirm/jquery-confirm.min.css}" rel="stylesheet" type="text/css"/>
+    <!--自定义样式-->
+    <link  th:href="@{/lyear/css/style.min.css}" rel="stylesheet" type="text/css"/>
+
+    <link th:src="@{/layui/css/layui.css}" rel="stylesheet" type="text/css"/>
+
+    <script th:src="@{/layui/layui.js}"></script>
+
+</head>
+<body>
+<div class="lyear-layout-web">
+    <div class="lyear-layout-container">
+        <!--左侧导航-->
+        <div th:replace="user/common/leftbar::#leftbaraside"></div>
+        <!--头部信息-->
+        <div th:replace="user/common/topbar::#topbarheader"></div>
+
+        <!--页面主要内容-->
+        <main class="lyear-layout-content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-10 col-lg-offset-1">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>零钱理财推荐 <button class="btn btn-primary btn-sm myBtn" >
+                                    <span class="mdi mdi-help-circle-outline"
+                                      aria-hidden="true"></span> 详情</button></h4>
+
+                            </div>
+                            <div th:if="${!changeMoneyList.isEmpty()}" class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover table-striped">
+                                        <thead>
+                                        <tr>
+                                            <th class="info">序号</th>
+                                            <th class="info">产品名称</th>
+                                            <th class="info">日收益率</th>
+                                            <th class="info">每万元收益</th>
+                                            <th class="info">起投金额</th>
+                                            <th class="info">相关操作</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr th:each="cm:${changeMoneyList}">
+                                            <td th:text="${cmStat.index+1}"></td>
+                                            <td th:text="${cm.name}"></td>
+                                            <td th:text="${#numbers.formatDecimal(cm.annualincome*100,1,4)}+'%'"></td>
+                                            <td th:text="${#numbers.formatDecimal(cm.peiincome,1,2)}+'元'"></td>
+
+                                            <td th:text="${cm.invesmoney}+'元'"></td>
+                                            <td>
+                                                <button class="btn btn-primary btn-sm buy_btn"
+                                                        th:attr="buyBtnId=${cm.id},buyBtnName=${cm.name}">
+															<span class="glyphicon glyphicon-usd"
+                                                                  aria-hidden="true"></span> 投资
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                                    <div class="add_password hidden">
+                                        <input id="password" name="password" type="password" value="">
+                                    </div>
+
+                            <!-- 显示分页信息 -->
+                            <div class="row">
+
+                                <div class="col-md-5 col-md-offset-1" >
+                                    <div class="btn-group">
+                                        <button class="btn btn-default">
+                                            <span>页次：</span>
+                                        </button>
+                                        <button class="btn btn-default">
+                                            <span th:text="${cmPageInfo.pageNum}+'/'+${cmPageInfo.pages}+'页'"></span>
+                                        </button>
+                                        <button class="btn btn-default">
+                                            <span>每页显示：</span>
+                                        </button>
+                                        <div class="btn-group">
+                                            <button id="btnGroupDrop1"
+                                                    class="btn btn-default dropdown-toggle"
+                                                    data-toggle="dropdown" aria-haspopup="true"
+                                                    aria-expanded="false"><span
+                                                    th:text="${cmPageInfo.pageSize}"></span>
+                                                <span class="caret"></span>
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                                <li th:each="i:${#numbers.sequence(1,10)}">
+                                                    <a th:text="${i}"
+                                                       th:href="@{/user/finance/toChangeMoney.html(pageNum=${cmPageInfo.pageNum},pageSize=${i})}"></a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <button class="btn btn-default">
+                                            <span>条</span>
+                                        </button>
+                                        <button class="btn btn-default">
+                                            <span>总记录数：</span>
+                                        </button>
+                                        <button class="btn btn-default">
+                                            <span th:text="${cmPageInfo.total}+'条'"></span>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- 分页条信息 -->
+                                <div class="col-md-5">
+                                    <nav aria-label="Page navigation">
+                                        <ul class="pagination pagination-lg pull-right"
+                                            style="margin-top: 0">
+                                            <li>
+                                                <a th:href="@{/user/finance/toChangeMoney.html(pageNum=1,pageSize=${cmPageInfo.pageSize})}">首页</a>
+                                            </li>
+                                            <li th:if="${cmPageInfo.hasPreviousPage }"><a
+                                                    th:href="@{/user/finance/toChangeMoney.html(pageNum=${cmPageInfo.pageNum}-1,pageSize=${cmPageInfo.pageSize})}"
+                                                    aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
+                                            </a></li>
+
+                                            <li th:each="page_Num:${cmPageInfo.navigatepageNums }"
+                                                th:class="${page_Num == cmPageInfo.pageNum?'active':''}">
+                                                <a th:if="${page_Num == cmPageInfo.pageNum}"
+                                                   th:text="${page_Num}"
+                                                   th:href="@{#}">
+                                                </a>
+                                                <a th:text="${page_Num}"
+                                                   th:if="${page_Num != cmPageInfo.pageNum}"
+                                                   th:href="@{/user/finance/toChangeMoney.html(pageNum=${page_Num},pageSize=${cmPageInfo.pageSize})}">
+                                                </a>
+                                            </li>
+
+                                            <li th:if="${cmPageInfo.hasNextPage }"><a
+                                                    th:href="@{/user/finance/toChangeMoney.html(pageNum=${cmPageInfo.pageNum}+1,pageSize=${cmPageInfo.pageSize})}"
+                                                    aria-label="Next"> <span aria-hidden="true">&raquo;</span>
+                                            </a></li>
+
+                                            <li><a
+                                                    th:href="@{/user/finance/toChangeMoney.html(pageNum=${cmPageInfo.pages},pageSize=${cmPageInfo.pageSize})}">末页</a>
+                                            </li>
+                                        </ul>
+                                    </nav>
+                                </div>
+                            </div>
+                            </div>
+                            <div th:if="${changeMoneyList.isEmpty()}" class="card-body">
+                                <div class="table-responsive">
+                                    <h4>很抱歉！暂时还没有零钱理财向您推荐</h4>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+        </main>
+        <!--End 页面主要内容-->
+    </div>
+</div>
+
+<!-- 引入jQuery和bootstrap的js -->
+<script th:src="@{/js/jquery.js}"></script>
+
+<script th:src="@{/bootstrap/js/bootstrap.js}"></script>
+<!--滚动条插件-->
+<script th:src="@{/lyear/js/perfect-scrollbar.min.js}"></script>
+<!--弹出框js-->
+<script th:src="@{/lyear/jconfirm/jquery-confirm.min.js}"></script>
+<!--自定义js脚本-->
+<script th:src="@{/lyear/js/main.min.js}"></script>
+
+
+
+<script th:inline="javascript">
+    $(document).on("click",".myBtn",function (){
+          $.alert("零钱理财买入后可随时撤销。收益=日利率×买入时长。(买入时长不足24小时的不算入)");
+    })
+    $(document).on("click",".buy_btn",function () {
+        var changeMoneyId = $(this).attr("buyBtnId");
+        var userId = [[${session.loginUser.id}]];
+        layui.use('layer', function(){
+            var layer = layui.layer;
+            layer.open({
+                type:1,
+                area: ['170px', '140px'],
+                title:'请输入密码',
+                btn: ['确定','取消'],
+                content:$('.add_password').html(),
+                yes:function (index,layero){
+                    var passWord = layero.find("#password").val();
+                     if (passWord==""){
+                         $.alert("密码不能为空");
+                         return false;
+                     }
+                    $.ajax({
+                        url : "/user/userBuyChangeMoney",
+                        type : "POST",
+                        data : {
+                            "changeMoneyId":changeMoneyId,
+                            "userId":userId,
+                            "passWord":passWord,
+                        },
+                        success : function(result) {
+                            if (result.code===100){
+                                $.alert('买入成功!');
+                                layer.close(index);
+                            }else  {
+
+                                if (result.code==300)
+                                {
+                                 $.alert('买入失败!,请前往个人信息设置支付密码');
+                                layer.close(index);
+                                }
+                                else if (result.code==400)
+                                {
+                                 $.alert('买入失败!，银行卡余额不足');
+                                layer.close(index);
+                                  }
+                                else if (result.code==500)
+                                {
+                                    $.alert('买入失败!，请绑定银行卡');
+                                  layer.close(index);
+                                  }
+                                else
+                                {
+                                    $.alert('买入失败!');
+                                     layer.close(index);
+                                  }
+                            }
+                        }
+                    });
+                }
+            })
+        });
+
+    })
+
+</script>
+</body>
+</html>

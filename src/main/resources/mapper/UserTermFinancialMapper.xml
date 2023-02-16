@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.crazy.finance.dao.UserTermFinancialDao">
+
+    <resultMap id="ResultMap" type="UserTermFinancial">
+    <id column="id" jdbcType="INTEGER" property="id"/>
+    <result column="userId" jdbcType="INTEGER" property="userid"/>
+    <result column="termId" jdbcType="INTEGER" property="termid"/>
+    <result column="startTime" jdbcType="TIMESTAMP" property="starttime"/>
+    <result column="endTime" jdbcType="TIMESTAMP" property="endtime"/>
+    <result column="status" jdbcType="INTEGER" property="status"/>
+    </resultMap>
+
+    <resultMap id="ResultMapAll" type="UserTermFinancial">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="userId" jdbcType="INTEGER" property="userid"/>
+        <result column="termId" jdbcType="INTEGER" property="termid"/>
+        <result column="startTime" jdbcType="DATE" property="starttime"/>
+        <result column="status" jdbcType="INTEGER" property="status"/>
+        <association property="termFinancial" javaType="termFinancial" column="termId"
+                     select="com.crazy.finance.dao.TermFinancialDao.selectTermFinancialById">
+            <id column="id" jdbcType="INTEGER" property="id"/>
+            <result column="name" jdbcType="VARCHAR" property="name"/>
+            <result column="invesTerm" jdbcType="VARCHAR" property="investerm"/>
+            <result column="leastMoney" jdbcType="DECIMAL" property="leastmoney"/>
+            <result column="profit" jdbcType="INTEGER" property="profit"/>
+            <result column="annualIncome" jdbcType="DECIMAL" property="annualincome"/>
+            <result column="income" jdbcType="DECIMAL" property="income"/>
+        </association>
+    </resultMap>
+
+    <insert id="insertuserTermFinancial" parameterType="userTermFinancial">
+         insert into user_term_financial(userId,termId,startTime,endtime,status)
+         values(#{userTermFinancial.userid},#{userTermFinancial.termid},#{userTermFinancial.starttime},#{userTermFinancial.endtime},#{userTermFinancial.status})
+    </insert>
+    <select id="selectAllUserTermFinancialById" resultMap="ResultMapAll">
+        select * from user_term_financial where userId=#{userId}
+    </select>
+</mapper>
